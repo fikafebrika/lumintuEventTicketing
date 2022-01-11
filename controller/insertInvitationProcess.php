@@ -39,7 +39,7 @@
 
         $voucherData = getVoucher($voucherURL, $_POST['voucher']);
         setInviterData($invitationURL, $inviterID, $voucherData['data'][0]['voucher_id']);
-        $sendEmailStatus = sendInviterEmail($inviterEmail, $buyTicketLink, $cred, $voucherID);
+        $sendEmailStatus = sendInviterEmail($inviterEmail, $buyTicketLink, $cred, $voucherData['data'][0]['voucher_id']);
 
         if ($sendEmailStatus == 'scs') {
             header('Location: ../view/details.php?' . $sendEmailStatus);
@@ -264,7 +264,7 @@
         $mailLocation = '../view/email/emailToOrder.html';
         $message = file_get_contents($mailLocation);
         $message = str_replace('%inviterMail%', $receiverEmail, $message);
-        if ($voucherID == 0) {
+        if ($voucher_id == 0) {
             $message = str_replace('%link%', $redirectLink . '?m=' . $cred, $message);
         }else {
             $message = str_replace('%link%', $redirectLink . '?m=' . $cred . '&voucher_id=' . $voucher_id, $message);
