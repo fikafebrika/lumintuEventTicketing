@@ -60,7 +60,7 @@
             </div> 
           <br>
           <div class="bayar">
-          <button type="button" class="btn btn-primary bayar">Bayar</button> 
+            <a href='../controller/invoiceProcess.php?m=<?php echo($_GET['m']); ?>' class="btn btn-primary bayar">Bayar</a> 
           </div>
       </div>
       </div>

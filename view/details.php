@@ -101,8 +101,8 @@
 
                                                 <input type="email" name="peserta1" class="form-control"
                                                     id="inputPeserta1" aria-describedby="emailHelp"
-                                                    placeholder="example : ex@gmail.com" oninput="validate(this.name)"
-                                                    disabled>
+                                                    placeholder="example : ex@gmail.com" oninput="validate(this.name)" value="<?php echo $customerEmail; ?>"
+                                                    readonly>
                                                 <small id="emailHelpBlock" class="form-text text-danger d-none">
                                                     Your email is not valid!
                                                 </small>

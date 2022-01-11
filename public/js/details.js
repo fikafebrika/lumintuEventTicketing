@@ -190,7 +190,7 @@ let addInputFieldInvitation = () => {
     id: `peserta${quantity}`,
   });
   $(`#${jenisPeserta} input`).val('');
-  $(`#${jenisPeserta} input`).prop('disabled', false)
+  $(`#${jenisPeserta} input`).prop('readonly', false)
   validate(`peserta${quantity}`);
   $(`#${jenisPeserta} #emailHelpBlock`).removeClass('d-none');
   $(`#${jenisPeserta} .row .col-2`).html(

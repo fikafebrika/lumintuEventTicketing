@@ -82,7 +82,7 @@
 
                 if ($_POST['tiket-peserta-' . $counter] < 4) {
                     if (insertOrder($orderURL, $invID, $customerID, $_POST['tiket-peserta-' . $counter])) {
-                        header('Location: ../view/statuspesanan.php?scsAll');
+                        header('Location: ../view/invoice.php?m=' . $_SESSION['cred']);
                     } else {
                         header('Location: ../view/statuspesanan.php?errOrder');
                     }
@@ -101,7 +101,7 @@
                 $counter++;
             } while (isset($_POST['tiket-peserta-' . $counter]));
             if ($counter > 1) {
-                header('Location: ../view/statuspesanan.php?scsAll');
+                header('Location: ../view/invoice.php?m=' . $_SESSION['cred']);
             }
         }
     }
