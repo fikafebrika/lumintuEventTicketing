@@ -17,7 +17,7 @@
     $email = $_POST['email'];
     $phoneNum = $_POST['phoneNum'];
     $cusCode = hash('sha512', $email.$phoneNum);
-    $loginLink = 'http://localhost/intern/ticketing/controller/verificationProcess.php?m=' . $cusCode;
+    $loginLink = 'http://localhost/lumintuEventTicketing/controller/verificationProcess.php?m=' . $cusCode;
 
     $curl = curl_init();
     curl_setopt_array($curl, array(

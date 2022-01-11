@@ -2,8 +2,8 @@
 
     session_start();
     $cred = $_SESSION['cred'];
-    $buyTicketLink = 'http://localhost/intern/ticketing/view/statuspesanan.php';
-    $bioLink = 'http://localhost/intern/ticketing/view/invitation.php';
+    $buyTicketLink = 'http://localhost/lumintuEventTicketing/view/statuspesanan.php';
+    $bioLink = 'http://localhost/lumintuEventTicketing/view/invitation.php';
     $customerURL = 'http://lumintu-tiket.tamiaindah.xyz:8055/items/customer';
     $invitationURL = 'http://lumintu-tiket.tamiaindah.xyz:8055/items/invitation';
     $voucherURL = 'http://lumintu-tiket.tamiaindah.xyz:8055/items/voucher';
