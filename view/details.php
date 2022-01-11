@@ -40,6 +40,39 @@
 
     <title>Details Event | Lumintu Event</title>
 </head>
+<script>
+    // Deklarasi Function Show Pop Up Sukses
+    const showPopUp = () => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Invitation Success!',
+            showConfirmButton: true,
+            confirmButtonColor: '#3085d6',
+            text: "Your Invitation is Completed! Please check the invitee's email.",
+        })
+    }
+
+    // Deklarasi Function Show Pop Up Email Exist
+    const showPopUpError = () => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Invitation Failed!',
+            showConfirmButton: true,
+            confirmButtonColor: '#3085d6',
+            text: `Failed!"`,
+        })
+    }
+</script>
+
+<!-- <?php
+    if (isset($_GET['scs'])){
+        echo '<script type="text/javascript">
+                showPopUp();
+            </script>';
+    }else{
+        echo '<script type="text/javascript">showPopUpError();</script>';
+    }
+?> -->
 
 <body>
     <div class="container-fluid banner-event mb-4">
@@ -102,11 +135,10 @@
                                                 <input type="email" name="peserta1" class="form-control"
                                                     id="inputPeserta1" aria-describedby="emailHelp"
                                                     placeholder="example : ex@gmail.com" oninput="validate(this.name)"
-                                                    disabled>
+                                                    value="<?php echo $customerEmail; ?>" readonly>
                                                 <small id="emailHelpBlock" class="form-text text-danger d-none">
                                                     Your email is not valid!
                                                 </small>
-
                                             </div>
                                             <div class="col-2 col-lg-2 col-md-2 col-sm-2 my-auto">
                                                 <button class="btn btn-danger btn-delete btn-sm rounded-0" type="button"
@@ -117,25 +149,34 @@
 
                                     </div>
                                 </div>
-                                <div class="text-right mt-2 mx-4 btn-plus">
-                                    <button type="button" class="btn btn-default btn-circle btn-lg rounded-circle"
-                                        onclick="addInputFieldInvitation()">
-                                        <i class="fa fa-plus"></i>
-                                    </button>
-                                </div>
-                                <div class="modal-footer border-0">
-                                    <div class="container mb-2 mt-5 d-none input-voucher">
-                                        <input type="text" name="voucher" class="form-control text-center"
-                                            id="inputVoucherCode" aria-describedby="voucherHelp"
-                                            placeholder="Voucher Code">
-                                    </div>
-                                    <div class="container text-center">
-                                        <button class="btn w-50 btn-invite" type="submit">Invite</button>
-                                    </div>
-                                </div>
+
+
 
                             </form>
 
+                        </div>
+
+                        <div class="modal-footer border-0">
+                            <div class="m-0 mb-2 mt-5 d-none input-voucher p-0 w-100">
+                                <div class="container-fluid row mx-auto">
+                                    <input type="text" name="voucher" class="form-control text-center col-10 w-100"
+                                        id="inputVoucherCode" aria-describedby="voucherHelp" placeholder="Voucher Code">
+                                    <button class="btn btn-danger col-2 btn-check">Check</button>
+                                </div>
+                            </div>
+                            <div class="text-center m-0 p-0 w-100">
+                                <div class="container-fluid row mx-auto">
+                                    <button class="btn btn-invite col-10" type="submit">Invite</button>
+                                    <div class="text-right btn-plus col-2">
+                                        <button type="button"
+                                            class="btn btn-default btn-circle btn-lg rounded-circle mx-auto"
+                                            onclick="addInputFieldInvitation()">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
 
                     </div>
@@ -203,27 +244,6 @@
 
     <!-- Independent Js -->
     <script src="../public/js/details.js"></script>
-
-    <script type="text/javascript">
-        // Mengambil Data Customer Yang Dikirim dari Backend
-        var cred = " <?php echo($customerEmail); ?>";
-        console.log(cred);
-
-        $(document).on('change', '.switchMe', function () {
-            let oldData = statusOfInput[0]
-            if (this.checked) {
-                $("input#inputPeserta1").val(cred);
-                $("#peserta1 #emailHelpBlock").addClass("d-none")
-                statusOfInput[0] = { ...oldData, status: true }
-                validate("peserta1")
-            } else {
-                $("#peserta1 #emailHelpBlock").removeClass("d-none")
-                statusOfInput[0] = { ...oldData, status: false }
-                validate("peserta1")
-                $("input#inputPeserta1").val('');
-            }
-        });
-    </script>
 
 </body>
 

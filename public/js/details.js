@@ -2,8 +2,10 @@ const IP = 'lumintu-tiket.tamiaindah.xyz:8055';
 const CAROUSEL = $('.owl-carousel');
 const TABLE = $('.table');
 const BUTTON_PLUS = $('.btn-plus');
+const BUTTON_CHECK_VOUCHER = $('.btn-check')
 let arrayOfSession = [];
 let statusOfInput = [{ name: `peserta1`, status: true }];
+let voucherCode = false
 
 const ID_EVENT = 2;
 
@@ -190,7 +192,7 @@ let addInputFieldInvitation = () => {
     id: `peserta${quantity}`,
   });
   $(`#${jenisPeserta} input`).val('');
-  $(`#${jenisPeserta} input`).prop('disabled', false)
+  $(`#${jenisPeserta} input`).prop('readonly', false)
   validate(`peserta${quantity}`);
   $(`#${jenisPeserta} #emailHelpBlock`).removeClass('d-none');
   $(`#${jenisPeserta} .row .col-2`).html(
@@ -208,13 +210,64 @@ let addInputFieldInvitation = () => {
 };
 
 const checkStatus = () => {
-  if (statusOfInput.find((element) => element.status === false) === undefined) {
-    $('.btn-invite').prop('disabled', false);
+  let useVoucher = $('.switchMe').prop('checked')
+  if (useVoucher) {
+    if (voucherCode) {
+      $('.btn-invite').prop('disabled', false);
+    } else {
+      $('.btn-invite').prop('disabled', true);
+    }
+
   } else {
-    $('.btn-invite').prop('disabled', true);
+    if (statusOfInput.find((element) => element.status === false) === undefined) {
+      $('.btn-invite').prop('disabled', false);
+    } else {
+      $('.btn-invite').prop('disabled', true);
+    }
   }
+
+
   return false;
 }
+
+const popUpTemplate = (icon, title, text) => {
+  Swal.fire({
+    icon: icon,
+    title: title,
+    showConfirmButton: true,
+    confirmButtonColor: '#3085d6',
+    text: text,
+  })
+}
+
+const checkVoucher = (params) => {
+  $.ajax({
+    url: `http://${IP}/items/voucher/?filter[voucher_code]=${params}`,
+    type: 'GET',
+    dataType: 'json',
+    success: function (data, textStatus, xhr) {
+      if (data.data.length === 1) {
+        if (data.data[0].current_stock > 0) { //Voucher Ada dan Jumlah Voucher Masih Menckupi
+          popUpTemplate('success', 'Voucher Can Be Used', 'Voucher akan diimplementasikan pada pesanan')
+          BUTTON_CHECK_VOUCHER.removeClass('btn-danger')
+          BUTTON_CHECK_VOUCHER.addClass('btn-success')
+          BUTTON_CHECK_VOUCHER.text("Used")
+        } else { // Voucher Ada Tapi Habis
+          popUpTemplate('error', 'Voucher Cannot Be Used', 'Voucher Habis')
+        }
+      } else { // Voucher Tidak tersedia
+        popUpTemplate('error', 'Voucher Cannot Be Used', 'Voucher Tidak Ada. Periksa Kembali!')
+      }
+    },
+    error: function (xhr, textStatus, errorThrown) {
+      console.log('Error in Database');
+    },
+  });
+}
+
+BUTTON_CHECK_VOUCHER.click(() => {
+  checkVoucher($('#inputVoucherCode').val());
+})
 
 const deleteField = (fieldNameClass) => {
   $(`#${fieldNameClass}`).remove()
@@ -273,29 +326,30 @@ let validate = (email) => {
 
 // Show Voucher Code Field
 $(document).on('change', '.switchMe', function () {
-  let oldData = statusOfInput[0];
+  // let oldData = statusOfInput[0];
   if (this.checked) {
-    $('#peserta1 #emailHelpBlock').addClass('d-none');
+    // $('#peserta1 #emailHelpBlock').addClass('d-none');
+    checkStatus()
     BUTTON_PLUS.addClass('d-none')
+    $('.btn-invite').removeClass('col-10')
+    $('.btn-invite').addClass('col-12')
     $(".input-voucher").removeClass("d-none")
-    statusOfInput[0] = { ...oldData, status: true };
-    validate('peserta1');
+    // statusOfInput[0] = { ...oldData, status: true };
+    // validate('peserta1');
     $(".peserta").not(':first').remove();
+    statusOfInput = statusOfInput.splice(0, 1)
   } else {
-    $('#peserta1 #emailHelpBlock').removeClass('d-none');
+    checkStatus()
+    // $('#peserta1 #emailHelpBlock').removeClass('d-none');
     BUTTON_PLUS.removeClass('d-none')
+    $('.btn-invite').addClass('col-10')
+    $('.btn-invite').removeClass('col-12')
     $(".input-voucher").addClass("d-none")
-    statusOfInput[0] = { ...oldData, status: false };
-    validate('peserta1');
+    // statusOfInput[0] = { ...oldData, status: true };
+    // validate('peserta1');
   }
-});
-$('input#voucher').on('input', () => {
-  if ($(this).val() != '') {
-    BUTTON_PLUS.addClass('d-none');
-  } else {
-    BUTTON_PLUS.removeClass('d-none');
-  }
-});
+  checkStatus()
+})
 
 document.querySelector('.body-form').addEventListener('submit', function (e) {
   var form = this;

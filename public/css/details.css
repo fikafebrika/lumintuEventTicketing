@@ -222,3 +222,7 @@ input#voucher {
     width: 60%;
     font-size: small;
 }
+
+.modal-footer{
+    box-sizing: border-box;
+}
