@@ -121,11 +121,9 @@
                     $mailStatus = sendInvitedEmail($pesertaEmail, $inviterEmail, $bioLink);
 
                     if ($mailStatus != 'scs'){
-                        echo 'ajg';
+                        header('Location: ../view/details.php?' . $mailStatus);
                     }
                 }
-
-                echo 'done';
             }
             header('Location: ../view/details.php?' . $mailStatus);
         }else{
