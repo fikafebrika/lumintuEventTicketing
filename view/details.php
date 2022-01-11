@@ -41,6 +41,40 @@
     <title>Details Event | Lumintu Event</title>
 </head>
 
+    <script>
+        // Deklarasi Function Show Pop Up Sukses
+        const showPopUp = () => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Invitation Success!',
+                showConfirmButton: true,
+                confirmButtonColor: '#3085d6',
+                text: "Your Invitation is Completed! Please check the invitee's email.",
+            })
+        }
+
+        // Deklarasi Function Show Pop Up Email Exist
+        const showPopUpError = () => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invitation Failed!',
+                showConfirmButton: true,
+                confirmButtonColor: '#3085d6',
+                text: `Failed!"`,
+            })
+        }
+    </script>
+
+    <!-- <?php
+        if (isset($_GET['scs'])){
+            echo '<script type="text/javascript">
+                    showPopUp();
+                </script>';
+        }else{
+            echo '<script type="text/javascript">showPopUpError();</script>';
+        }
+    ?> -->
+
 <body>
     <div class="container-fluid banner-event mb-4">
         <div class="container deskripsi d-flex align-items-center justify-content-start">
@@ -203,27 +237,6 @@
 
     <!-- Independent Js -->
     <script src="../public/js/details.js"></script>
-
-    <script type="text/javascript">
-        // Mengambil Data Customer Yang Dikirim dari Backend
-        var cred = " <?php echo($customerEmail); ?>";
-        console.log(cred);
-
-        $(document).on('change', '.switchMe', function () {
-            let oldData = statusOfInput[0]
-            if (this.checked) {
-                $("input#inputPeserta1").val(cred);
-                $("#peserta1 #emailHelpBlock").addClass("d-none")
-                statusOfInput[0] = { ...oldData, status: true }
-                validate("peserta1")
-            } else {
-                $("#peserta1 #emailHelpBlock").removeClass("d-none")
-                statusOfInput[0] = { ...oldData, status: false }
-                validate("peserta1")
-                $("input#inputPeserta1").val('');
-            }
-        });
-    </script>
 
 </body>
 
