@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
+
+        .body,
+        * {
+            font-family: 'Montserrat', sans-serif;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+
+        }
+
+        .row {
+            width: 100vw;
+            height: 512px;
+            border: 1px solid black;
+        }
+
+        .logo,
+        .body,
+        .barcode {
+            height: 512px;
+            float: left;
+            padding: 16px;
+        }
+
+        .logo {
+            width: 10%;
+            background-color: #38435F;
+        }
+
+        .logo-organizer {
+            width: 100%;
+            object-fit: contain;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Body CSS */
+        .body {
+            width: 60%;
+            background-color: #38435F;
+        }
+
+        .container-body {
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        .event-name {
+            height: 50%;
+        }
+
+        .event-name h1 {
+            font-size: 72px;
+            font-weight: bold;
+            color: #FFFFFF;
+        }
+
+        .event-address {
+            height: 40%;
+        }
+
+        .event-address p {
+            font-size: 24px;
+            color: #FFFFFF;
+        }
+
+        .event-details {
+            height: 10%;
+        }
+
+        .row-event {
+            height: 100%;
+            width: 100%;
+        }
+
+        .row-event::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+
+        .ticket-type {
+            width: 30%;
+            height: 100%;
+            float: left;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #D4AF37;
+            color: #38435F;
+            font-weight: bold;
+        }
+
+
+
+        .ticket-date {
+            width: 70%;
+            height: 100%;
+            float: right;
+            display: flex;
+            justify-content: end;
+            align-items: center;
+        }
+
+        .ticket-date .box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 70%;
+            background-color: #D4AF37;
+            color: #38435F;
+            font-weight: bold;
+        }
+
+        .barcode {
+            width: 30%;
+        }
+
+        .barcode-img {
+            width: 100%;
+            height: 50%;
+            text-align: center;
+        }
+
+        .barcode-img img {
+            height: 80%;
+            object-fit: contain;
+            padding: 0;
+            margin: 0;
+
+        }
+
+
+        .session-details {
+            height: 50%;
+            margin-top: 16px;
+        }
+
+        .session-details ul {
+            list-style-type: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .session-details li {
+            height: 20%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #D4AF37;
+            color: #38435F;
+            margin-bottom: 8px;
+        }
+
+        .peserta-name {
+            height: 20%;
+            font-weight: bold;
+            font-size: 32px;
+        }
+
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="row">
+        <div class="logo">
+            <img src="../public/img/kraton.jpg" alt="" class="logo-organizer">
+        </div>
+        <div class="body">
+            <div class="container-body">
+                <div class="event-name">
+                    <h1>Dream World Wide In Jogja</h1>
+                </div>
+                <div class="event-address">
+                    <p>Gang, Jalan Candirejo, Jl. Pandega Siwi No.6A, Manggung, Caturtunggal, Depok Sub-District, Sleman
+                        Regency, Special Region of Yogyakarta 55281</p>
+                </div>
+                <div class="event-details">
+                    <div class="row-event">
+                        <div class="ticket-type">
+                            <div class="box">
+                                ALL DAY TICKET
+                            </div>
+                        </div>
+                        <div class="ticket-date">
+                            <div class="box">
+                                02 DECEMBER 2021 - 06 DECEMBER 2021
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="barcode">
+            <div class="barcode-img">
+                <img src="../public/temporaryImg/QRcode_2_Day 1 Only.png" alt="">
+                <div class="peserta-name">
+                    Arafat Maku
+                </div>
+            </div>
+            <div class="session-details">
+                <ul>
+                    <li>02 Desember 2021 5:00 PM</li>
+                    <li>02 Desember 2021 5:00 PM</li>
+                    <li>02 Desember 2021 5:00 PM</li>
+                    <li>02 Desember 2021 5:00 PM</li>
+                </ul>
+            </div>
+        </div>
+
+    </section>
+</body>
+
+</html>
