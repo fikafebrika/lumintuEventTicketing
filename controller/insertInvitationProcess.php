@@ -33,9 +33,103 @@
 
     curl_close($curl);
 
-    echo '</br>' . $cred;
-
     $voucherID = 0;
+
+    if (!empty($_POST['voucher'])) {
+
+        $voucherData = getVoucher($voucherURL, $_POST['voucher']);
+        setInviterData($invitationURL, $inviterID, $voucherData['data'][0]['voucher_id']);
+        $sendEmailStatus = sendInviterEmail($inviterEmail, $buyTicketLink, $cred, $voucherData['data'][0]['voucher_id']);
+
+        if ($sendEmailStatus == 'scs') {
+            header('Location: ../view/details.php?' . $sendEmailStatus);
+        }else {
+            header('Location: ../view/details.php?' . $sendEmailStatus);
+        }
+
+    }
+    elseif ($numberOfPost == 2) {
+
+        if ($inviterEmail == $_POST['peserta1']) {
+
+            setInviterData($invitationURL, $inviterID, $voucherID);
+            $sendEmailStatus = sendInviterEmail($inviterEmail, $buyTicketLink, $cred, $voucherID);
+
+            if ($sendEmailStatus == 'scs') {
+                header('Location: ../view/details.php?' . $sendEmailStatus);
+            }else {
+                header('Location: ../view/details.php?' . $sendEmailStatus);
+            }
+
+        }
+    }else{
+        $x = 2;
+        do {
+            if ($_POST['peserta'.$x] != ''){
+                $curl = curl_init();
+                curl_setopt($curl, CURLOPT_URL, $customerURL . '?&filter[customer_email]=' . $_POST['peserta'.$x]);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                $responseID = curl_exec($curl);
+                $resultID = json_decode($responseID, true);
+
+                if (isset($resultID['data'][0]['customer_email'])){
+                    $counter++;
+                }
+
+                curl_close($curl);
+
+                $x++;
+            }
+        } while (isset($_POST['peserta'.$x]));
+
+        if ($counter == 0){
+
+            setInviterData($invitationURL, $inviterID, $voucherID);
+
+            for ($x = 2; $x < $numberOfPost; $x++){
+                $pesertaEmail = $_POST['peserta'.$x];
+                
+                $getCusStatus = setCustomer($customerURL, $pesertaEmail);
+
+                if (!isset($getCusStatus['errors'][0]['extensions']['code'])){
+                    $curl = curl_init();
+
+                    curl_setopt($curl, CURLOPT_URL, $customerURL . '?&filter[customer_email]=' . $pesertaEmail);
+                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                    $responseID = curl_exec($curl);
+                    $resultID = json_decode($responseID, true);
+
+                    curl_close($curl);
+
+                    $invitedStatus = setInvitedData($invitationURL, $resultID, $inviterID);
+
+                    if (!isset($invitedStatus['errors'][0]['extensions']['code'])){
+
+                    }else{
+                        header('Location: ../view/details.php?errOnInv');
+                    }
+                }
+                else{
+                    header('Location: ../view/details.php?errCus');
+                }
+            }
+            
+            $sendEmailStatus = sendInviterEmail($inviterEmail, $buyTicketLink, $cred, $voucherID);
+
+            if ($sendEmailStatus == 'scs') {
+                for ($i=2; $i < $numberOfPost; $i++) { 
+                    $mailStatus = sendInvitedEmail($pesertaEmail, $inviterEmail, $bioLink);
+
+                    if ($mailStatus != 'scs'){
+                        header('Location: ../view/details.php?' . $mailStatus);
+                    }
+                }
+            }
+            header('Location: ../view/details.php?' . $mailStatus);
+        }else{
+            header('Location: ../view/details.php?dupEm');
+        }
+    }
 
     function getVoucher($link, $voucher_code){
         $curl = curl_init();
@@ -166,10 +260,11 @@
         $mail->addAddress($receiverEmail);
         $mail->Subject = "[Lumintu Events] Link Pemesanan Tiket";
         $mail->isHTML(true);
+
         $mailLocation = '../view/email/emailToOrder.html';
         $message = file_get_contents($mailLocation);
         $message = str_replace('%inviterMail%', $receiverEmail, $message);
-        if ($voucherID == 0) {
+        if ($voucher_id == 0) {
             $message = str_replace('%link%', $redirectLink . '?m=' . $cred, $message);
         }else {
             $message = str_replace('%link%', $redirectLink . '?m=' . $cred . '&voucher_id=' . $voucher_id, $message);
@@ -177,9 +272,10 @@
         $mail->msgHTML($message);
 
         if ($mail->send()) {
+            $mail->clearAddresses();
             return 'scs';
         }else {
-            return 'mailErrInviter';
+            return $mail->ErrorInfo;
         }
     }
 
@@ -199,6 +295,7 @@
         $mail->addAddress($invitedEmail);
         $mail->Subject = "[Lumintu Events] Link Pengisian Biodata Pemesanan Tiket";
         $mail->isHTML(true);
+        
         $mailLocation = '../view/email/emailInvitation.html';
         $message = file_get_contents($mailLocation);
         $message = str_replace('%receiverMail%', $invitedEmail, $message);
@@ -207,107 +304,10 @@
         $mail->msgHTML($message);
 
         if ($mail->send()) {
+            $mail->clearAddresses();
             return 'scs';
         }else {
-            return 'mailErrInvited';
-        }
-
-        $mail->clearAddresses();
-    }
-
-    if (!empty($_POST['voucher'])) {
-
-        $voucherData = getVoucher($voucherURL, $_POST['voucher']);
-        setInviterData($invitationURL, $inviterID, $voucherData['data'][0]['voucher_id']);
-        $sendEmailStatus = sendInviterEmail($inviterEmail, $buyTicketLink, $cred, $voucherID);
-
-        if ($sendEmailStatus == 'scs') {
-            header('Location: ../view/details.php?' . $sendEmailStatus);
-        }else {
-            header('Location: ../view/details.php?' . $sendEmailStatus);
-        }
-
-    }
-    elseif ($numberOfPost == 2) {
-
-        if ($inviterEmail == $_POST['peserta1']) {
-
-            setInviterData($invitationURL, $inviterID, $voucherID);
-            $sendEmailStatus = sendInviterEmail($inviterEmail, $buyTicketLink, $cred, $voucherID);
-
-            if ($sendEmailStatus == 'scs') {
-                header('Location: ../view/details.php?' . $sendEmailStatus);
-            }else {
-                header('Location: ../view/details.php?' . $sendEmailStatus);
-            }
-
-        }
-    }else{
-        for ($x = 2; $x <= $numberOfPost; $x++){
-            if ($_POST['peserta'.$x] != ''){
-                $curl = curl_init();
-                curl_setopt($curl, CURLOPT_URL, $customerURL . '?&filter[customer_email]=' . $_POST['peserta'.$x]);
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-                $responseID = curl_exec($curl);
-                $resultID = json_decode($responseID, true);
-
-                if (isset($resultID['data'][0]['customer_email'])){
-                    $counter++;
-                }
-
-                curl_close($curl);
-            }
-        }
-
-        if ($counter == 0){
-
-            setInviterData($invitationURL, $inviterID, $voucherID);
-
-            for ($x = 2; $x <= $numberOfPost; $x++){
-                $pesertaEmail = $_POST['peserta'.$x];
-                
-                $getCusStatus = setCustomer($customerURL, $pesertaEmail);
-
-                if (!isset($getCusStatus['errors'][0]['extensions']['code'])){
-                    $curl = curl_init();
-
-                    curl_setopt($curl, CURLOPT_URL, $customerURL . '?&filter[customer_email]=' . $pesertaEmail);
-                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-                    $responseID = curl_exec($curl);
-                    $resultID = json_decode($responseID, true);
-
-                    curl_close($curl);
-
-                    $invitedStatus = setInvitedData($invitationURL, $resultID, $inviterID);
-
-                    if (!isset($invitedStatus['errors'][0]['extensions']['code'])){
-
-                    }else{
-                        header('Location: ../view/details.php?errOnInv');
-                    }
-                }
-                else{
-                    header('Location: ../view/details.php?errCus');
-                }
-            }
-
-            for ($x = 1; $x <= $numberOfPost; $x++){
-                $pesertaEmail = $_POST['peserta'.$x];
-                if ($x == 1){
-                    $sendEmailStatus = sendInviterEmail($inviterEmail, $buyTicketLink, $cred, $voucherID);
-                }
-                else{
-                    $mailStatus = sendInvitedEmail($pesertaEmail, $inviterEmail, $bioLink);
-                }
-
-                if ($mailStatus == 'scs'){
-                    header('Location: ../view/details.php?allScs');
-                }else{
-                    header('Location: ../view/details.php?mailFailed');
-                }
-            }
-        }else{
-            header('Location: ../view/details.php?dupEm');
+            return 'errInvited';
         }
     }
 

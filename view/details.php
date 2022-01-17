@@ -74,6 +74,40 @@
     }
 ?> -->
 
+    <script>
+        // Deklarasi Function Show Pop Up Sukses
+        const showPopUp = () => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Invitation Success!',
+                showConfirmButton: true,
+                confirmButtonColor: '#3085d6',
+                text: "Your Invitation is Completed! Please check the invitee's email.",
+            })
+        }
+
+        // Deklarasi Function Show Pop Up Email Exist
+        const showPopUpError = () => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invitation Failed!',
+                showConfirmButton: true,
+                confirmButtonColor: '#3085d6',
+                text: `Failed!"`,
+            })
+        }
+    </script>
+
+    <!-- <?php
+        if (isset($_GET['scs'])){
+            echo '<script type="text/javascript">
+                    showPopUp();
+                </script>';
+        }else{
+            echo '<script type="text/javascript">showPopUpError();</script>';
+        }
+    ?> -->
+
 <body>
     <div class="container-fluid banner-event mb-4">
         <div class="container deskripsi d-flex align-items-center justify-content-start">
